@@ -35,7 +35,7 @@
 
 <body>
 
-    <h1>arrays-Exercicios</h1>
+    <h1>Arrays-Exercicios</h1>
 
     <?php
 
@@ -44,23 +44,23 @@
     echo '<hr>';
 
     $notas_alunos = array(
-        'PSW1' => array(
+        '<b>PSW1</b>' => array(
             'Avaliação' => 6,
             'Teste' => 7
         ),
-        'BD' => array(
+        '<b>BD</b>' => array(
             'Avaliação' => 5,
             'Teste' => 9
         ),
-        'Redes' => array(
+        '<b>Redes</b>' => array(
             'Avaliação' => 10,
             'Teste' => 10
         ),
-        'ASW1' => array(
+        '<b>ASW1</b>' => array(
             'Avaliação' => 4,
             'Teste' => 2
         ),
-        'PI1' => array(
+        '<b>PI1</b>' => array(
             'Avaliação' => 8,
             'Teste' => 9
         )
