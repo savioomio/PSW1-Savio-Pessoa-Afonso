@@ -236,9 +236,13 @@
             <div class="chart-container">
                 <canvas id="<?php echo $aluno; ?>"></canvas>
             </div>
+
+
+            <!-- Taquei a biblioteca chart.JS para imprimir a media dos alunos em um grafico -->
+
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
-                /*Taquei a biblioteca chart.JS para imprimir a media dos alunos em um grafico*/
+                
                 var ctx = document.getElementById("<?php echo $aluno; ?>").getContext('2d');
                 var chart = new Chart(ctx, {
                     type: 'bar',
@@ -261,6 +265,7 @@
                     }
                 });
             </script>
+            
     <?php }
     } ?>
 </body>
