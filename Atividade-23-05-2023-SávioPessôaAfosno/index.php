@@ -4,39 +4,35 @@ ini_set("display_errors", 1);
 
 // Verifica se o formulário foi submetido via método POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $texto = $_POST['texto'];
-    limparArquivoTexto(); // Limpa o conteúdo do arquivo de texto
-    escreverArquivoTexto($texto); // Escreve o novo texto no arquivo
+    $cpf = $_POST['cpf'];
+    $nome = $_POST['nome'];
+    $endereco = $_POST['endereco'];
+    $telefone = $_POST['telefone'];
+    gravarAluno($cpf, $nome, $endereco, $telefone);
 }
 
-// Função para limpar o conteúdo do arquivo de texto
-function limparArquivoTexto() {
-    $nomeArquivo = 'escrito_por_min.txt';
-    if (file_exists($nomeArquivo)) {
-        $fp = fopen($nomeArquivo, 'w');
-        if ($fp) {
-            fclose($fp);
-        }
-    }
+function gravarAluno($cpf, $nome, $endereco, $telefone)
+{
+    $aluno = array(
+        $cpf => array(
+            'nome' => $nome,
+            'endereco' => $endereco,
+            'telefone' => $telefone
+        )
+    );
+
+    $aluno_json = json_encode($aluno);
+
+    $nomeArquivo = 'alunos.txt';
+    file_put_contents($nomeArquivo, $aluno_json, FILE_APPEND);
+
+    echo "Aluno gravado com sucesso!";
 }
 
-// Função para escrever o texto no arquivo de texto
-function escreverArquivoTexto($texto) {
-    $nomeArquivo = 'escrito_por_min.txt';
-    $fp = fopen($nomeArquivo, 'a+');
-    if ($fp) {
-        fputs($fp, "$texto\n");
-        fclose($fp);
-    }
-    echo "[OK] Texto escrito com sucesso!";
-}
+$nomeArquivo = 'alunos.txt';
 
-$nomeArquivo = 'escrito_por_min.txt';
-
-// Verifica se o parâmetro "download" está presente na URL
 if (isset($_GET['download'])) {
     if (file_exists($nomeArquivo)) {
-        // Configura os cabeçalhos para fazer o download do arquivo
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename=' . basename($nomeArquivo));
@@ -51,6 +47,7 @@ if (isset($_GET['download'])) {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Salvar e Visualizar Arquivo de Texto</title>
     <style>
@@ -72,6 +69,7 @@ if (isset($_GET['download'])) {
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             border-radius: 4px;
+            width: 30%;
         }
 
         label {
@@ -80,12 +78,20 @@ if (isset($_GET['download'])) {
             margin-bottom: 5px;
         }
 
-        textarea {
-            width: 100%;
+        .forms {
+            width: 95%;
+            height: 3vh;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
+            box-shadow: 0px 0px 5px 0px;
+            border-radius: 6px;
+            outline: none;
+            border: 0px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        .forms:focus {
+            box-shadow: 0px 0px 40px -10px;
+            transition: all 0.4s ease;
         }
 
         input[type="submit"] {
@@ -107,6 +113,25 @@ if (isset($_GET['download'])) {
             background-color: #45a049;
         }
 
+        input[type="reset"] {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="reset"]:hover {
+            background-color: #45a049;
+        }
+
         a {
             display: inline-block;
             margin-top: 10px;
@@ -125,18 +150,30 @@ if (isset($_GET['download'])) {
         }
     </style>
 </head>
+
 <body>
     <h1>Salvar e Visualizar Arquivo de Texto</h1>
     <form method="POST" action="">
-        <label for="texto">Texto:</label><br>
-        <textarea name="texto" id="texto" rows="5" cols="40"></textarea><br><br>
+        <label for="cpf">CPF:</label><br>
+        <input type="text" name="cpf" id="cpf" class="forms" required><br><br>
+
+        <label for="nome">Nome:</label><br>
+        <input type="text" name="nome" id="nome" class="forms" required><br><br>
+
+        <label for="endereco">Endereço:</label><br>
+        <input type="text" name="endereco" id="endereco" class="forms" required><br><br>
+
+        <label for="telefone">Telefone:</label><br>
+        <input type="text" name="telefone" id="telefone" class="forms" required><br><br>
+
         <input type="submit" name="salvar" value="Salvar">
-        <input type="submit" name="limpar" class="limpa" value="Limpar">
+        <input type="reset" name="limpar" class="limpa" value="Limpar">
     </form>
 
     <br>
 
     <a href="?download=1">Download do Arquivo</a>
-    <a href="escrito_por_min.txt" target="_blank">Visualizar o Arquivo</a>
+    <a href="alunos.txt" target="_blank">Visualizar o Arquivo</a>
 </body>
+
 </html>
