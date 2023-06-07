@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +19,6 @@
 
     ?>
 
-
     <div class="container-principal">
 
         <div class='box-fundo'>
@@ -30,7 +30,8 @@
             <div class="form-box">
                 <h2>Criar Conta</h2>
                 <p> Já é um membro? <a href="login.page.php"> Login </a> </p>
-                <form action="painel.php" method="post">
+                
+                <form action="metodos/cadastra_user.php" method="post">
                     <div class="linhas-forms">
                         <div class="input-group">
                             <label for="nome"> Nome Completo</label>
@@ -45,12 +46,12 @@
 
                         <div class="input-group">
                             <label for="numero-matricula"> Matricula</label>
-                            <input type="text" id="numero-matricula" name="numero-matricula" required>
+                            <input type="text" id="numero-matricula" name="numero_matricula" required>
                         </div>
 
                         <div class="input-group">
                             <label for="materia-preferida"> Materia preferida </label>
-                            <select class="input-group" type="text" id="materia-preferida" name="materia-preferida">
+                            <select class="input-group" type="text" id="materia-preferida" name="materia_preferida">
                                 <option value=""></option>
                                 <option value="PSW">PSW</option>
                                 <option value="ASW">ASW</option>
@@ -76,7 +77,7 @@
 
                         <div class="input-group w50">
                             <label for="senha">Senha</label>
-                            <input type="password" id="senha" name="password" placeholder="Digite sua senha" required>
+                            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
                         </div>
 
                     </div>

@@ -1,17 +1,4 @@
 <?php
-
-session_start();
-
-
-$nome = $_SESSION['nome'];
-$email = $_SESSION['email'];
-$senha = $_SESSION['senha'];
-$turma = $_SESSION['turma'];
-$matricula = $_SESSION['matricula'];
-$preferida = $_SESSION['preferida'];
-$cpf = $_SESSION['cpf'];
-
-
 ?>
 
 <!DOCTYPE html>

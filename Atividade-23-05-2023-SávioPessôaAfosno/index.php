@@ -24,6 +24,7 @@ function gravarAluno($cpf, $nome, $endereco, $telefone)
     $aluno_json = json_encode($aluno);
 
     $nomeArquivo = 'alunos.txt';
+
     file_put_contents($nomeArquivo, $aluno_json, FILE_APPEND);
 
     echo "Aluno gravado com sucesso!";
@@ -31,7 +32,7 @@ function gravarAluno($cpf, $nome, $endereco, $telefone)
 
 $nomeArquivo = 'alunos.txt';
 
-if (isset($_GET['download'])) {
+if (isset($_POST['download=1'])) {
     if (file_exists($nomeArquivo)) {
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
