@@ -11,17 +11,6 @@ include_once "funcoes.php";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Inclui o arquivo CSS do Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <style>
-
-        .edit-icon {
-            color: #0d6efd;
-        }
-
-        .delete-icon {
-            color: #dc3545;
-        }
-
-    </style>
 </head>
 <body>
     <div class="container shadow-lg">
