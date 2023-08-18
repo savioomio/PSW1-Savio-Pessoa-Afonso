@@ -21,7 +21,7 @@ if (isset($_POST['adicionar'])) {
 
     if ($statusValido) {
         // Prepara e executa a query para adicionar o aluno
-        $stmt = $conn->prepare("INSERT INTO aluno (nome, idade, datanascimento, endereco, estatus) VALUES (:nome, :idade, :datanascimento, :endereco, :estatus)");
+        $stmt = $conn->prepare("INSERT INTO Aluno (nome, idade, datanascimento, endereco, estatus) VALUES (:nome, :idade, :datanascimento, :endereco, :estatus)");
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
         $stmt->bindParam(':datanascimento', $dataNascimento);
@@ -55,7 +55,7 @@ if (isset($_POST['alterar']) && isset($_GET['id'])) {
 
     if ($statusValido) {
         // Prepara e executa a query para atualizar os dados do aluno
-        $stmt = $conn->prepare("UPDATE aluno SET nome = :nome, idade = :idade, datanascimento = :datanascimento, endereco = :endereco, estatus = :estatus WHERE id = :id");
+        $stmt = $conn->prepare("UPDATE Aluno SET nome = :nome, idade = :idade, datanascimento = :datanascimento, endereco = :endereco, estatus = :estatus WHERE id = :id");
         $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
         $stmt->bindParam(':datanascimento', $dataNascimento);
@@ -80,7 +80,7 @@ if (isset($_POST['confirmacao']) && isset($_GET['id'])) {
     // Verifica se o ID fornecido coincide com o ID do aluno
     if ($confirmacao == $idAluno) {
         // Prepara e executa a query para excluir o aluno
-        $stmt = $conn->prepare("DELETE FROM aluno WHERE id = :id");
+        $stmt = $conn->prepare("DELETE FROM Aluno WHERE id = :id");
         $stmt->bindParam(':id', $idAluno, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -94,7 +94,7 @@ if (isset($_POST['confirmacao']) && isset($_GET['id'])) {
 }
 
 // Prepara e executa a query para selecionar todos os alunos
-$stmt = $conn->prepare("SELECT * FROM aluno");
+$stmt = $conn->prepare("SELECT * FROM Aluno");
 $stmt->execute();
 $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>

@@ -1,8 +1,8 @@
 <?php
 // Configurações do banco de dados
-$servername = "10.70.230.53:3306"; // Nome do servidor
-$username = "sisaluno"; // Nome de usuário do banco de dados
-$password = "sisaluno2023"; // Senha do banco de dados
+$servername = "localhost"; // Nome do servidor
+$username = "root"; // Nome de usuário do banco de dados
+$password = ""; // Senha do banco de dados
 $dbname = "sisaluno"; // Nome do banco de dados
 
 // Conexão com o banco de dados usando PDO

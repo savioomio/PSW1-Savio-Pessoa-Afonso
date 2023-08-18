@@ -12,9 +12,9 @@ if (isset($_POST['adicionar'])) {
     $status = $_POST['status'];
 
     // Prepara e executa a query para adicionar o professor
-    $stmt = $conn->prepare("INSERT INTO Professor (nome, cpf, idade, datanascimento, endereco, estatus) VALUES (:nome, :cpf, :idade, :datanascimento, :endereco, :estatus)");
+    $stmt = $conn->prepare("INSERT INTO professor (nome, cpf, idade, datanascimento, endereco, estatus) VALUES (:nome, :cpf, :idade, :datanascimento, :endereco, :estatus)");
     $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
-    $stmt->bindParam(':cpf', $cpf, PDO::PARAM_STR);
+    $stmt->bindParam(':cpf', $cpf, PDO::PARAM_INT);
     $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
     $stmt->bindParam(':datanascimento', $dataNascimento);
     $stmt->bindParam(':endereco', $endereco, PDO::PARAM_STR);
@@ -37,7 +37,7 @@ if (isset($_POST['alterar']) && isset($_GET['id'])) {
     $status = $_POST['status'];
 
     // Prepara e executa a query para atualizar os dados do professor
-    $stmt = $conn->prepare("UPDATE Professor SET nome = :nome, cpf = :cpf, idade = :idade, datanascimento = :datanascimento, endereco = :endereco, estatus = :estatus WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE professor SET nome = :nome, cpf = :cpf, idade = :idade, datanascimento = :datanascimento, endereco = :endereco, estatus = :estatus WHERE id = :id");
     $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
     $stmt->bindParam(':cpf', $cpf, PDO::PARAM_STR);
     $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
@@ -57,7 +57,7 @@ if (isset($_POST['excluir']) && isset($_GET['id'])) {
     $idProfessor = $_GET['id'];
 
     // Prepara e executa a query para excluir o professor
-    $stmt = $conn->prepare("DELETE FROM Professor WHERE id = :id");
+    $stmt = $conn->prepare("DELETE FROM professor WHERE id = :id");
     $stmt->bindParam(':id', $idProfessor, PDO::PARAM_INT);
     $stmt->execute();
 
@@ -67,7 +67,7 @@ if (isset($_POST['excluir']) && isset($_GET['id'])) {
 }
 
 // Prepara e executa a query para selecionar todos os professores
-$stmt = $conn->prepare("SELECT * FROM Professor");
+$stmt = $conn->prepare("SELECT * FROM professor");
 $stmt->execute();
 $professores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>

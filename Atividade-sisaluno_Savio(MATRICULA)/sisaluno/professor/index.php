@@ -5,121 +5,90 @@ require_once "../conn.php";
 // Verifica se o formulário de adição foi enviado
 if (isset($_POST['adicionar'])) {
     $nome = $_POST['nome'];
+    $cpf = $_POST['cpf'];
     $idade = $_POST['idade'];
     $dataNascimento = $_POST['datanascimento'];
     $endereco = $_POST['endereco'];
     $status = $_POST['status'];
 
-    // Verifica se o status é válido
-    $statusValido = false;
-    $statusPermitidos = array("Aprovado", "Reprovado", "Trancado");
-    if (in_array($status, $statusPermitidos)) {
-        $statusValido = true;
-    }
+    // Prepara e executa a query para adicionar o professor
+    $stmt = $conn->prepare("INSERT INTO Professor (nome, cpf, idade, datanascimento, endereco, estatus) VALUES (:nome, :cpf, :idade, :datanascimento, :endereco, :estatus)");
+    $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+    $stmt->bindParam(':cpf', $cpf, PDO::PARAM_STR);
+    $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
+    $stmt->bindParam(':datanascimento', $dataNascimento);
+    $stmt->bindParam(':endereco', $endereco, PDO::PARAM_STR);
+    $stmt->bindParam(':estatus', $status, PDO::PARAM_STR);
+    $stmt->execute();
 
-    
-
-    if ($statusValido) {
-        // Prepara e executa a query para adicionar o aluno
-        $stmt = $conn->prepare("INSERT INTO aluno (nome, idade, datanascimento, endereco, estatus) VALUES (:nome, :idade, :datanascimento, :endereco, :estatus)");
-        $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
-        $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
-        $stmt->bindParam(':datanascimento', $dataNascimento);
-        $stmt->bindParam(':endereco', $endereco, PDO::PARAM_STR);
-        $stmt->bindParam(':estatus', $status, PDO::PARAM_STR);
-        $stmt->execute();
-
-        // Redireciona de volta para a página atual após a adição
-        header("Location: index.php");
-        exit();
-    } else {
-        echo "Status inválido!";
-    }
+    // Redireciona de volta para a página atual após a adição
+    header("Location: index.php");
+    exit();
 }
 
 // Verifica se o formulário de alteração foi enviado
 if (isset($_POST['alterar']) && isset($_GET['id'])) {
-    $idAluno = $_GET['id'];
+    $idProfessor = $_GET['id'];
     $nome = $_POST['nome'];
+    $cpf = $_POST['cpf'];
     $idade = $_POST['idade'];
     $dataNascimento = $_POST['datanascimento'];
     $endereco = $_POST['endereco'];
     $status = $_POST['status'];
 
-    // Verifica se o status é válido
-    $statusValido = false;
-    $statusPermitidos = array("Aprovado", "Reprovado", "Trancado");
-    if (in_array($status, $statusPermitidos)) {
-        $statusValido = true;
-    }
+    // Prepara e executa a query para atualizar os dados do professor
+    $stmt = $conn->prepare("UPDATE Professor SET nome = :nome, cpf = :cpf, idade = :idade, datanascimento = :datanascimento, endereco = :endereco, estatus = :estatus WHERE id = :id");
+    $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+    $stmt->bindParam(':cpf', $cpf, PDO::PARAM_STR);
+    $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
+    $stmt->bindParam(':datanascimento', $dataNascimento);
+    $stmt->bindParam(':endereco', $endereco, PDO::PARAM_STR);
+    $stmt->bindParam(':estatus', $status, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $idProfessor, PDO::PARAM_INT);
+    $stmt->execute();
 
-    if ($statusValido) {
-        // Prepara e executa a query para atualizar os dados do aluno
-        $stmt = $conn->prepare("UPDATE aluno SET nome = :nome, idade = :idade, datanascimento = :datanascimento, endereco = :endereco, estatus = :estatus WHERE id = :id");
-        $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
-        $stmt->bindParam(':idade', $idade, PDO::PARAM_INT);
-        $stmt->bindParam(':datanascimento', $dataNascimento);
-        $stmt->bindParam(':endereco', $endereco, PDO::PARAM_STR);
-        $stmt->bindParam(':estatus', $status, PDO::PARAM_STR);
-        $stmt->bindParam(':id', $idAluno, PDO::PARAM_INT);
-        $stmt->execute();
-
-        // Redireciona de volta para a página atual após a atualização
-        header("Location: index.php");
-        exit();
-    } else {
-        echo "Status inválido!";
-    }
+    // Redireciona de volta para a página atual após a atualização
+    header("Location: index.php");
+    exit();
 }
 
-// Verifica se o ID do aluno a ser excluído foi fornecido
-if (isset($_POST['confirmacao']) && isset($_GET['id'])) {
-    $idAluno = $_GET['id'];
-    $confirmacao = $_POST['confirmacao'];
+// Verifica se o formulário de exclusão foi enviado
+if (isset($_POST['excluir']) && isset($_GET['id'])) {
+    $idProfessor = $_GET['id'];
 
-    // Verifica se o ID fornecido coincide com o ID do aluno
-    if ($confirmacao == $idAluno) {
-        // Prepara e executa a query para excluir o aluno
-        $stmt = $conn->prepare("DELETE FROM aluno WHERE id = :id");
-        $stmt->bindParam(':id', $idAluno, PDO::PARAM_INT);
-        $stmt->execute();
+    // Prepara e executa a query para excluir o professor
+    $stmt = $conn->prepare("DELETE FROM Professor WHERE id = :id");
+    $stmt->bindParam(':id', $idProfessor, PDO::PARAM_INT);
+    $stmt->execute();
 
-        // Redireciona de volta para a página atual após a exclusão
-        header("Location: index.php");
-        exit();
-    } else {
-        // Caso o ID fornecido não coincida, exibe uma mensagem de erro
-        echo "ID de confirmação inválido!";
-    }
+    // Redireciona de volta para a página atual após a exclusão
+    header("Location: index.php");
+    exit();
 }
 
-// Prepara e executa a query para selecionar todos os alunos
-$stmt = $conn->prepare("SELECT * FROM aluno");
+// Prepara e executa a query para selecionar todos os professores
+$stmt = $conn->prepare("SELECT * FROM Professor");
 $stmt->execute();
-$alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$professores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Alunos</title>
+    <title>Professores</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="shortcut icon" href="" type="image/x-icon">
 </head>
 
 <body>
     <div class="container">
-        <br>
-        <br>
-
-        <h1>Lista de Alunos</h1>
-
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#adicionarModal">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 17">
+    <br>
+    <br>  
+    <h1>Lista de Professores</h1>
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#adicionarModal"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 20 20">
                 <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
                 <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
-            </svg>Adicionar Aluno</button>
-        <a href="../index.php">
+            </svg>Adicionar Professor</button>
+            <a href="../index.php">
             <button class="btn btn-secondary mb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-database-fill-gear" viewBox="0 0 16 17">
                     <path d="M8 1c-1.573 0-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4s.875 1.755 1.904 2.223C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777C13.125 5.755 14 5.007 14 4s-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1Z" />
@@ -132,6 +101,7 @@ $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
+                    <th>CPF</th>
                     <th>Idade</th>
                     <th>Data de Nascimento</th>
                     <th>Endereço</th>
@@ -140,57 +110,64 @@ $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($alunos as $aluno) { ?>
+                <?php foreach ($professores as $professor) { ?>
                     <tr>
-                        <td><?php echo $aluno['id']; ?></td>
-                        <td><?php echo $aluno['nome']; ?></td>
-                        <td><?php echo $aluno['idade']; ?></td>
-                        <td><?php echo $aluno['datanascimento']; ?></td>
-                        <td><?php echo $aluno['endereco']; ?></td>
-                        <td><?php echo $aluno['estatus']; ?></td>
+                        <td><?php echo $professor['id']; ?></td>
+                        <td><?php echo $professor['nome']; ?></td>
+                        <td><?php echo $professor['cpf']; ?></td>
+                        <td><?php echo $professor['idade']; ?></td>
+                        <td><?php echo $professor['datanascimento']; ?></td>
+                        <td><?php echo $professor['endereco']; ?></td>
+                        <td><?php echo $professor['estatus']; ?></td>
                         <td>
-                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $aluno['id']; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 20 17">
+                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $professor['id']; ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 20 17">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                </svg>Editar</a>
-                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#excluirModal<?php echo $aluno['id']; ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 17">
+                                </svg>
+                                Editar</a>
+                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#excluirModal<?php echo $professor['id']; ?>">
+                            
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 17">
                                     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                                 </svg> Excluir</a>
                         </td>
                     </tr>
                     <!-- Modal de edição -->
-                    <div class="modal fade" id="editarModal<?php echo $aluno['id']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $aluno['id']; ?>" aria-hidden="true">
+                    <div class="modal fade" id="editarModal<?php echo $professor['id']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $professor['id']; ?>" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editarModalLabel<?php echo $aluno['id']; ?>">Editar Aluno</h5>
+                                    <h5 class="modal-title" id="editarModalLabel<?php echo $professor['id']; ?>">Editar Professor</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="index.php?id=<?php echo $aluno['id']; ?>">
+                                    <form method="POST" action="index.php?id=<?php echo $professor['id']; ?>">
                                         <div class="mb-3">
                                             <label for="nome" class="form-label">Nome:</label>
-                                            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo $aluno['nome']; ?>" required>
+                                            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo $professor['nome']; ?>" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="cpf" class="form-label">CPF:</label>
+                                            <input type="text" class="form-control" id="cpf" name="cpf" value="<?php echo $professor['cpf']; ?>" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="idade" class="form-label">Idade:</label>
-                                            <input type="number" class="form-control" id="idade" name="idade" value="<?php echo $aluno['idade']; ?>" required>
+                                            <input type="number" class="form-control" id="idade" name="idade" value="<?php echo $professor['idade']; ?>" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="datanascimento" class="form-label">Data de Nascimento:</label>
-                                            <input type="date" class="form-control" id="datanascimento" name="datanascimento" value="<?php echo $aluno['datanascimento']; ?>" required>
+                                            <input type="date" class="form-control" id="datanascimento" name="datanascimento" value="<?php echo $professor['datanascimento']; ?>" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="endereco" class="form-label">Endereço:</label>
-                                            <input type="text" class="form-control" id="endereco" name="endereco" value="<?php echo $aluno['endereco']; ?>" required>
+                                            <input type="text" class="form-control" id="endereco" name="endereco" value="<?php echo $professor['endereco']; ?>" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="status" class="form-label">Status:</label>
                                             <select class="form-select" id="status" name="status" required>
-                                                <option value="Aprovado" <?php echo ($aluno['estatus'] == 'Aprovado') ? 'selected' : ''; ?>>Aprovado</option>
-                                                <option value="Reprovado" <?php echo ($aluno['estatus'] == 'Reprovado') ? 'selected' : ''; ?>>Reprovado</option>
-                                                <option value="Trancado" <?php echo ($aluno['estatus'] == 'Trancado') ? 'selected' : ''; ?>>Trancado</option>
+                                                <option value="Ativo" <?php if ($professor['estatus'] == 'Ativo') echo 'selected'; ?>>Ativo</option>
+                                                <option value="Desativado" <?php if ($professor['estatus'] == 'Desativado') echo 'selected'; ?>>Desativado</option>
                                             </select>
                                         </div>
                                         <div class="modal-footer">
@@ -203,18 +180,18 @@ $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                     <!-- Modal de exclusão -->
-                    <div class="modal fade" id="excluirModal<?php echo $aluno['id']; ?>" tabindex="-1" aria-labelledby="excluirModalLabel<?php echo $aluno['id']; ?>" aria-hidden="true">
+                    <div class="modal fade" id="excluirModal<?php echo $professor['id']; ?>" tabindex="-1" aria-labelledby="excluirModalLabel<?php echo $professor['id']; ?>" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="excluirModalLabel<?php echo $aluno['id']; ?>">Excluir Aluno</h5>
+                                    <h5 class="modal-title" id="excluirModalLabel<?php echo $professor['id']; ?>">Excluir Professor</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Você tem certeza que deseja excluir o aluno <?php echo $aluno['nome']; ?> com o ID <?php echo $aluno['id']; ?>?</p>
-                                    <form method="POST" action="index.php?id=<?php echo $aluno['id']; ?>">
+                                    <p>Você tem certeza que deseja excluir o professor com ID <?php echo $professor['id']; ?>?</p>
+                                    <form method="POST" action="index.php?id=<?php echo $professor['id']; ?>">
                                         <div class="mb-3">
-                                            <label for="confirmacao">Digite o ID do aluno para confirmar:</label>
+                                            <label for="confirmacao">Digite o ID do professor para confirmar:</label>
                                             <input type="text" class="form-control" id="confirmacao" name="confirmacao" required>
                                         </div>
                                         <div class="modal-footer">
@@ -236,7 +213,7 @@ $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adicionarModalLabel">Adicionar Aluno</h5>
+                    <h5 class="modal-title" id="adicionarModalLabel">Adicionar Professor</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -244,6 +221,10 @@ $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome:</label>
                             <input type="text" class="form-control" id="nome" name="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cpf" class="form-label">CPF:</label>
+                            <input type="text" class="form-control" id="cpf" name="cpf" required>
                         </div>
                         <div class="mb-3">
                             <label for="idade" class="form-label">Idade:</label>
@@ -260,14 +241,13 @@ $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="mb-3">
                             <label for="status" class="form-label">Status:</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="Aprovado">Aprovado</option>
-                                <option value="Reprovado">Reprovado</option>
-                                <option value="Trancado">Trancado</option>
+                                <option value="Ativo">Ativo</option>
+                                <option value="Desativado">Desativado</option>
                             </select>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                            <button type="submit" class="btn btn-primary" name="adicionar">Adicionar Aluno</button>
+                            <button type="submit" class="btn btn-primary" name="adicionar">Adicionar Professor</button>
                         </div>
                     </form>
                 </div>
